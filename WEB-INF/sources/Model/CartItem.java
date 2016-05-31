@@ -3,6 +3,7 @@ package moviedb_model;
 import java.sql.*;
 import java.util.ArrayList;
 
+// Item to represent a Movie in the shopping cart
 public class CartItem {
     private String movie_id;
     private String movie_title;

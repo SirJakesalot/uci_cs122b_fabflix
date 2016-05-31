@@ -91,7 +91,7 @@ public class Browse extends HttpServlet {
             movie_query += search_requirements;
 
             // Get the movies for the page and their associated stars
-            ArrayList<Movie> movies = Movie.getMoviesForPage(statement_parameters, movie_query);
+            ArrayList<Movie> movies = Movie.getMoviesForQuery(statement_parameters, movie_query);
 
             // The search requirements given they had no results
             if (movies == null) {

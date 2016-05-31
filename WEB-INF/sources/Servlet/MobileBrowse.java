@@ -68,7 +68,7 @@ public class MobileBrowse extends HttpServlet {
             movie_query += movieIdsRange(page, page_size, movie_count);
 
             // Get the movies for the page and their associated stars
-            ArrayList<Movie> movies = Movie.getMoviesForPage(statement_parameters, movie_query);
+            ArrayList<Movie> movies = Movie.getMoviesForQuery(statement_parameters, movie_query);
             response.setContentType("text/html");
             PrintWriter writer = response.getWriter();
             String json = "[{\"movie_count\":\"" + movie_count + "\"}";

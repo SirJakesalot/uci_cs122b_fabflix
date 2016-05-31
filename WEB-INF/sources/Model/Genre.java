@@ -4,7 +4,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Genre {
-    // May need to may the id an int
     private String id;
     private String name;
 
@@ -12,6 +11,7 @@ public class Genre {
         this.id = id;
         this.name = name;
     }
+
     public Genre(ResultSet rs) {
         try {
             this.id = rs.getString("id");

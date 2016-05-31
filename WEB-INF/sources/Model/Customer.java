@@ -3,7 +3,6 @@ import java.sql.*;
 import java.util.ArrayList;
 
 public class Customer {
-    // May need to may the id an int
     private String id;
     private String first_name;
     private String last_name;
@@ -60,8 +59,7 @@ public class Customer {
         statement_parameters.add(email);
         statement_parameters.add(password);
         
-        //System.out.println(query);
-        Customer c = null;
+        Customer customer = null;
         // Manages opening/closing the connections to the database
         DataSource ds = new DataSource();
         // Open a connection and execute the query
@@ -72,15 +70,14 @@ public class Customer {
             if (ds.rs.isBeforeFirst()) {
                 //System.out.println("ResultSet is not empty");
                 ds.rs.next();
-                c = new Customer(ds.rs);
+                customer = new Customer(ds.rs);
             }
         } catch (SQLException se) {
             DataSource.logError("ERROR: Customer login", se);
         } finally {
             ds.closeQuery();
         }
-        
-        return c;
+        return customer;
     }
 
 /*    

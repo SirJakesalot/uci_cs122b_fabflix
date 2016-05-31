@@ -39,7 +39,7 @@ public class Employee {
         statement_parameters.add(email);
         statement_parameters.add(password);
         
-        Employee e = null;
+        Employee employee = null;
         // Manages opening/closing the connections to the database
         DataSource ds = new DataSource();
         // Open a connection and execute the query
@@ -50,15 +50,14 @@ public class Employee {
             if (ds.rs.isBeforeFirst()) {
                 //System.out.println("ResultSet is not empty");
                 ds.rs.next();
-                e = new Employee(ds.rs);
+                employee = new Employee(ds.rs);
             }
         } catch (SQLException se) {
             DataSource.logError("ERROR: Employee login", se);
         } finally {
             ds.closeQuery();
         }
-        
-        return e;
+        return employee;
     }
 
 /*    

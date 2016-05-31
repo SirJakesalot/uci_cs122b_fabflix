@@ -86,52 +86,6 @@ public class Movie {
     public String banner_url(String new_add) { banner_url = new_add; return banner_url(); }
     public String trailer_url(String new_trailer_url) { trailer_url = new_trailer_url; return trailer_url(); }
 
-
-    // Return the number of movies for the given query
-    public static int getMovieCount(ArrayList<String> statement_parameters, String query) {
-        int count = 0;
-        // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
-        // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
-        try {
-            // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                ds.rs.next();
-                count = ds.rs.getInt(1);
-            }
-        } catch (SQLException se) {
-            DataSource.logError("ERROR: Movie getMovieCount", se);
-        } finally {
-            ds.closeQuery();
-        }
-        return count;
-    }
-
-    // Return the movies for the given query
-    public static ArrayList<Movie> getMoviesForPage(ArrayList<String> statement_parameters, String query) {
-        ArrayList<Movie> movies = new ArrayList<Movie>();
-        // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
-        // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
-        try {
-            // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    movies.add(new Movie(ds.rs));
-                }
-            } else {
-                return null;
-            }
-        } catch (SQLException se) {
-            DataSource.logError("ERROR: Movie getMoviesForPage", se);
-        } finally {
-            ds.closeQuery();
-        }
-        return movies;
-    }
-
     // Get ArrayList of all stars in a movie 
     public ArrayList<Star> getStars() {
         if (this.id() == null) { return null; }

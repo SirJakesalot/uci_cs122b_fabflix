@@ -98,7 +98,7 @@ public class DataSource {
         }
     }
 
-    // Return the number of database entries for the given query
+    // Return the number of table entries for the given query
     public static int getQueryCount(String query, ArrayList<String> statement_parameters) {
         int count = 0;
         // Manages opening/closing the connections to the database
@@ -166,13 +166,4 @@ public class DataSource {
         }
         return genres;
     }
-
-    // No longer needed since we do not have to specify the type
-    public static ArrayList<String> buildParameter(String type, String value) {
-        ArrayList<String> param = new ArrayList<String>();
-        param.add(type);
-        param.add(value);
-        return param;
-    }
-
 }
