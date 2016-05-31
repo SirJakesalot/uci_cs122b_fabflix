@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--
+  Copyright 2004 The Apache Software Foundation
+
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+    "http://java.sun.com/dtd/web-app_2_3.dtd">
+
+<web-app>
+  <welcome-file-list>
+    <welcome-file>/login.jsp</welcome-file>
+  </welcome-file-list>
+
+  <display-name>fabflix web-xml display name</display-name>
+  <description>fabflix web-xml description</description>
+
+    <security-constraint>
+     <web-resource-collection>
+        <web-resource-name>HTTPSOnly</web-resource-name>
+        <url-pattern>/*</url-pattern>
+     </web-resource-collection>
+     <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+     </user-data-constraint>
+    </security-constraint>
+
+
+<!-- Login -->
+  <servlet>
+    <servlet-name>fabflixLogin</servlet-name>
+    <servlet-class>Login</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixLogin</servlet-name>
+    <url-pattern>/login</url-pattern>
+  </servlet-mapping>
+<!-- Logout -->
+  <servlet>
+    <servlet-name>fabflixLogout</servlet-name>
+    <servlet-class>Logout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixLogout</servlet-name>
+    <url-pattern>/logout</url-pattern>
+  </servlet-mapping>
+<!-- Main -->
+  <servlet>
+    <servlet-name>fabflixMain</servlet-name>
+    <servlet-class>Main</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixMain</servlet-name>
+    <url-pattern>/customer/main</url-pattern>
+  </servlet-mapping>
+<!-- Browse -->
+  <servlet>
+    <servlet-name>fabflixBrowse</servlet-name>
+    <servlet-class>Browse</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixBrowse</servlet-name>
+    <url-pattern>/customer/browse</url-pattern>
+  </servlet-mapping>
+<!-- ShoppingCart -->
+  <servlet>
+    <servlet-name>fabflixShoppingCart</servlet-name>
+    <servlet-class>ShoppingCart</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixShoppingCart</servlet-name>
+    <url-pattern>/customer/shopping_cart</url-pattern>
+  </servlet-mapping>
+<!-- Checkout -->
+  <servlet>
+    <servlet-name>fabflixCheckout</servlet-name>
+    <servlet-class>Checkout</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixCheckout</servlet-name>
+    <url-pattern>/customer/checkout</url-pattern>
+  </servlet-mapping>
+<!-- Purchase -->
+  <servlet>
+    <servlet-name>fabflixPurchase</servlet-name>
+    <servlet-class>Purchase</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixPurchase</servlet-name>
+    <url-pattern>/customer/purchase</url-pattern>
+  </servlet-mapping>
+<!-- SingleMovie -->
+  <servlet>
+    <servlet-name>fabflixSingleMovie</servlet-name>
+    <servlet-class>SingleMovie</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixSingleMovie</servlet-name>
+    <url-pattern>/customer/single_movie</url-pattern>
+  </servlet-mapping>
+<!-- SingleStar -->
+  <servlet>
+    <servlet-name>fabflixSingleStar</servlet-name>
+    <servlet-class>SingleStar</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixSingleStar</servlet-name>
+    <url-pattern>/customer/single_star</url-pattern>
+  </servlet-mapping>
+<!-- Employee Dashboard -->
+  <servlet>
+    <servlet-name>fabflixEmployeeDashboard</servlet-name>
+    <jsp-file>/employee/_dashboard.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixEmployeeDashboard</servlet-name>
+    <url-pattern>/employee/_dashboard</url-pattern>
+  </servlet-mapping>
+<!-- AddStar -->
+  <servlet>
+    <servlet-name>fabflixAddStar</servlet-name>
+    <servlet-class>AddStar</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixAddStar</servlet-name>
+    <url-pattern>/employee/add_star</url-pattern>
+  </servlet-mapping>
+<!-- AddMovie -->
+  <servlet>
+    <servlet-name>fabflixAddMovie</servlet-name>
+    <servlet-class>AddMovie</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixAddMovie</servlet-name>
+    <url-pattern>/employee/add_movie</url-pattern>
+  </servlet-mapping>
+<!-- MobileLogin -->
+  <servlet>
+    <servlet-name>fabflixMobileLogin</servlet-name>
+    <servlet-class>MobileLogin</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixMobileLogin</servlet-name>
+    <url-pattern>/mobile/login</url-pattern>
+  </servlet-mapping>
+<!-- MobileBrowse -->
+  <servlet>
+    <servlet-name>fabflixMobileBrowse</servlet-name>
+    <servlet-class>MobileBrowse</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixMobileBrowse</servlet-name>
+    <url-pattern>/mobile/browse</url-pattern>
+  </servlet-mapping>
+<!-- MobileMovieStars -->
+  <servlet>
+    <servlet-name>fabflixMobileMovieStars</servlet-name>
+    <servlet-class>MobileMovieStars</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixMobileMovieStars</servlet-name>
+    <url-pattern>/mobile/movie</url-pattern>
+  </servlet-mapping>
+<!-- MobileStarMovies -->
+  <servlet>
+    <servlet-name>fabflixMobileStarMovies</servlet-name>
+    <servlet-class>MobileStarMovies</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixMobileStarMovies</servlet-name>
+    <url-pattern>/mobile/star</url-pattern>
+  </servlet-mapping>
+<!-- Hover -->
+  <servlet>
+    <servlet-name>fabflixHover</servlet-name>
+    <servlet-class>Hover</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixHover</servlet-name>
+    <url-pattern>/customer/hover</url-pattern>
+  </servlet-mapping>
+<!-- AutocompleteSearch -->
+  <servlet>
+    <servlet-name>fabflixAutocompleteSearch</servlet-name>
+    <servlet-class>AutocompleteSearch</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>fabflixAutocompleteSearch</servlet-name>
+    <url-pattern>/customer/autocomplete_search</url-pattern>
+  </servlet-mapping>
+<!-- -->
+</web-app>

@@ -1,0 +1,20 @@
+<html>
+<body>
+<h1>Group 14</h1>
+<h2>README Report</h2>
+<h3>How to compile the code</h3>
+<p>change to the directory containing the servlet files</p>
+<p>$ cd /var/lib/tomcat7/webapps/project4/WEB-INF/sources/Servlets</p>
+<p>run the build script that will compile all packages</p>
+<p>$ ./build</p>
+<h3>How to create a class file that can be compiled</h3>
+<p>Add a .java file to the Servlets directory and run the build script</p>
+<h3>Android App</h3>
+<p>Our group made an iOS application and demo'd it to the TA already, group 14. We included the files</p>
+<h3>Our Database for Project 4</h3>
+<p>We are using a new database called moviedb_project4 for this project so that any changes we make won't interfere with the grading of project 3</p>
+<h3>Project 4 war name</h3>
+<p>We used the name fabflix_webapp instead of fabflix</p>
+</body>
+<html>
+

@@ -1,0 +1,9 @@
+Caching : In brief, we constucted lists to store the informations we obtained from the xml files and used these lists later.
+
+Batch Inserts : we also have implemented batch inserts in our xml parser. In brief, we stored information we obtained from xml files into lists and execute batch every 3000 items if it hasn't reached the end of the file.
+
+Disabling Auto-commit : We also used that optimation strategy. In brief, we disabled the auto commit before sending any query to the database and commit all the queries together.  
+
+Prepared Statement : We used the prepared statements with the batch inserts.
+
+In summary, these optimazations did improve the code, without using batch inserts and disabling auto-commit, we need more than 40 minutes to finish parsing, with batch and diabling auto-commit, we only need about 10 minutes. Still not very fast, but they did improve the performance.   

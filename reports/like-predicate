@@ -1,0 +1,14 @@
+<html>
+<body>
+<h1>Group 14</h1>
+<h2>Like-Predicate Report</h2>
+<p>For the director and stars, we use like statements such as:</p>
+<p>"SELECT COL FROM TABLE WHERE COL LIKE '%input%'"</p>
+<br>
+<p>For the title, we used the same strategy but also included sub-strings of the input.</p>
+<p>For example, with the title "Terminal", we matched:</p>
+<p>*Terminal*, *Termina*, *Termain* and *Termi*. We choose to stop at the length of 5 characters to narrow the search results.</p>
+<p>The given query will allow the user to match titles such as "Terminal", "Terminator" and "Terminator 2"</p>
+</body>
+<html>
+
