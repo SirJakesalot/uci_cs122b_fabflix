@@ -1,6 +1,6 @@
 #!/bin/sh
 
-FOLDER=project4
+FOLDER=fabflix
 
 ROOT_DIR=/var/lib/tomcat7/webapps/$FOLDER/WEB-INF # for AWS instance
 #ROOT_DIR=/home/ubuntu/Spring_2016/cs_122b/project3_14/$FOLDER/WEB-INF # for testing

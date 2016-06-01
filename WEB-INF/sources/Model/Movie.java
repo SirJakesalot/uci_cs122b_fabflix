@@ -77,6 +77,14 @@ public class Movie {
 
     public ArrayList<Star> stars() { return stars; }
     public ArrayList<Genre> genres() { return genres; }
+    public String toJSON() {
+        return "{\"id\":\"" + id() + "\"," +
+                "\"title\":\"" + title() + "\"," +
+                "\"year\":\"" + year() + "\"," +
+                "\"director\":\"" + director() + "\"," +
+                "\"banner_url\":\"" + banner_url() + "\"," +
+                "\"trailer_url\":\"" + trailer_url() + "\"}";
+    }
 
     // Movie set functions
     public String id(String new_id) { id = new_id; return id(); }
@@ -86,65 +94,8 @@ public class Movie {
     public String banner_url(String new_add) { banner_url = new_add; return banner_url(); }
     public String trailer_url(String new_trailer_url) { trailer_url = new_trailer_url; return trailer_url(); }
 
-    // Get ArrayList of all stars in a movie 
-    public ArrayList<Star> getStars() {
-        if (this.id() == null) { return null; }
-
-        this.stars = new ArrayList<Star>();
-        String query = "SELECT * FROM stars WHERE id IN (SELECT star_id FROM stars_in_movies WHERE movie_id=?);";
-        ArrayList<String> statement_parameters = new ArrayList<String>();
-        statement_parameters.add(this.id());
-
-        // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
-        // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
-
-        try {
-            // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    this.stars.add(new Star(ds.rs));
-                }
-            }
-        } catch (SQLException se) {
-            DataSource.logError("ERROR: Movie getStars", se);
-        } finally {
-            // Close all open connections
-            ds.closeQuery();
-        }
-        return this.stars;
-    }
-
-    public ArrayList<Genre> getGenres() {
-        if (this.id() == null) { return null; }
-
-        this.genres = new ArrayList<Genre>();
-        String query = "SELECT * FROM genres WHERE id IN (SELECT genre_id FROM genres_in_movies WHERE movie_id=?);";
-        ArrayList<String> statement_parameters = new ArrayList<String>();
-        statement_parameters.add(this.id());
-
-        // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
-        // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
-
-        try {
-            // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    this.genres.add(new Genre(ds.rs));
-                }
-            }
-        } catch (SQLException se) {
-            DataSource.logError("ERROR: Movie getMovieGenres", se);
-        } finally {
-            // Close all open connections
-            ds.closeQuery();
-        }
-
-        return this.genres;
-    }
+    public ArrayList<Star> stars(ArrayList<Star> new_stars) { stars = new_stars; return stars; }
+    public ArrayList<Genre> genres(ArrayList<Genre> new_genres) { genres = new_genres; return genres; }
 
 /*
     public static void main(String[] args) {

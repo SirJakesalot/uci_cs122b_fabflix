@@ -33,33 +33,6 @@ public class Star {
         }
     }
 
-    public Star(String star_id) {
-        String query = "SELECT * FROM stars WHERE id=?;";
-        ArrayList<String> statement_parameters = new ArrayList<String>();
-        statement_parameters.add(star_id);
-
-        // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
-        // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
-        
-        try {
-            // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                ds.rs.next();
-                this.id = ds.rs.getString("id");
-                this.first_name = ds.rs.getString("first_name");
-                this.last_name = ds.rs.getString("last_name");
-                this.dob = ds.rs.getString("dob");
-                this.photo_url = ds.rs.getString("photo_url");
-            }
-        } catch (SQLException se) {
-            DataSource.logError("ERROR: Star star_id", se);
-        } finally {
-            ds.closeQuery();
-        }
-    }
-
     // Star get functions
     public String id() { return id; }
     public String first_name() { return first_name; }
@@ -68,6 +41,13 @@ public class Star {
     public String photo_url() { return photo_url; }
 
     public ArrayList<Movie> movies() { return movies; }
+    public String toJSON() {
+        return "{\"id\":\"" + id() + "\"," +
+                "\"first_name\":\"" + first_name() + "\"," +
+                "\"last_name\":\"" + last_name() + "\"," +
+                "\"dob\":\"" + dob() + "\"," +
+                "\"photo_url\":\"" + photo_url() + "\"}";
+    }
 
     // Star set functions
     public String id(String new_id) { id = new_id; return id(); }
@@ -76,38 +56,8 @@ public class Star {
     public String dob(String new_dob) { dob = new_dob; return dob(); }
     public String photo_url(String new_photo_url) { photo_url = new_photo_url; return photo_url(); }
 
-    // Return Star from http GET request
+    public ArrayList<Movie> movies(ArrayList<Movie> new_movies) { movies = new_movies; return movies; }
 
-    // Get ArrayList of all Movies a Star has appeared in
-    public ArrayList<Movie> getMovies() {
-        if (this.id() == null) { return null; }
-
-        this.movies = new ArrayList<Movie>();
-        String query = "SELECT * FROM movies WHERE id IN (SELECT movie_id FROM stars_in_movies WHERE star_id=?);";
-        ArrayList<String> statement_parameters = new ArrayList<String>();
-        statement_parameters.add(this.id());
-
-        // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
-        // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
-
-        try {
-            // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    this.movies.add(new Movie(ds.rs));
-                }
-            }
-        } catch (SQLException se) {
-            DataSource.logError("ERROR: Star getStarMovies ", se);
-        } finally {
-            // Close all open connections
-            ds.closeQuery();
-        }
-
-        return movies;
-    }
 /*    
     public static void main(String[] args) {
         Star s = new Star("1", "Tom", "Hanks", "123456", "https://website.image");

@@ -1,5 +1,4 @@
 import moviedb_model.Star;
-import moviedb_model.Movie;
 import moviedb_model.DataSource;
 
 import java.io.*;
@@ -16,10 +15,15 @@ public class SingleStar extends HttpServlet {
     }
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         try {
-            Star star = new Star(request.getParameter("star_id"));
-            star.getMovies();
 
-            request.setAttribute("star", star);
+            String star_id = request.getParameter("star_id");
+
+            ArrayList<String> statement_parameters = new ArrayList<String>();
+            statement_parameters.add(star_id);
+
+            ArrayList<Star> stars = DataSource.getStarsForQuery("SELECT * FROM stars WHERE id=? LIMIT 1;",statement_parameters);
+
+            request.setAttribute("star", stars.get(0));
             request.getRequestDispatcher("single_star.jsp").forward(request,response);
 
         } catch (Exception e) {
@@ -33,10 +37,8 @@ public class SingleStar extends HttpServlet {
             DataSource.logError("SingleStar doGet", e);
         } 
     }
-    
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException
-    {
+
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doGet(request, response);
     }
 }

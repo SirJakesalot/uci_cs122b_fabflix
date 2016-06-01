@@ -17,29 +17,30 @@ public class Hover extends HttpServlet
     {
        return "Hover";
     }
-    
+   
+    // Get all the Movie information and forward to hover.jsp 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            Movie movie = new Movie(request.getParameter("movie_id"));
-            System.out.println("movie_id = " + movie.id());
-            movie.getGenres();
-            movie.getStars();
+            String movie_id = request.getParameter("movie_id");
+            ArrayList<String> statement_parameters = new ArrayList<String>();
+            statement_parameters.add(movie_id);
 
-            request.setAttribute("movie", movie);
+            ArrayList<Movie> movies = DataSource.getMoviesForQuery("SELECT * FROM movies WHERE id=?;",statement_parameters);
+
+            request.setAttribute("movie", movies.get(0));
             request.getRequestDispatcher("hover.jsp").forward(request, response);
 
         } catch (Exception e) {
+            // Need a better Error Management system
             response.setContentType("text/html");
             PrintWriter out = response.getWriter();
             out.println("<HTML><HEAD><TITLE>Main Error</TITLE></HEAD>");
             out.println(e.toString());
-            DataSource.logError("SingleStar doGet", e);
+            DataSource.logError("Hover doGet", e);
         }
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException
-    {
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doGet(request, response);
     }
 }

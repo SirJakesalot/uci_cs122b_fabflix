@@ -91,16 +91,12 @@ public class Browse extends HttpServlet {
             movie_query += search_requirements;
 
             // Get the movies for the page and their associated stars
-            ArrayList<Movie> movies = Movie.getMoviesForQuery(statement_parameters, movie_query);
+            ArrayList<Movie> movies = DataSource.getMoviesForQuery(movie_query, statement_parameters);
 
             // The search requirements given they had no results
             if (movies == null) {
                 request.setAttribute("error", "No movie results");
             } else {
-                for (Movie movie: movies) {
-                    movie.getGenres();
-                    movie.getStars();
-                }
                 String base_url = getBasePageURL(request);
                 request.setAttribute("movies", movies);
                 request.setAttribute("first_page", getPageURL(base_url, 1, page_size, order, order_by));
@@ -158,7 +154,6 @@ public class Browse extends HttpServlet {
         }
         return url;
     }
-
 
     // Calculate page count
     private static int getPageCount(int movie_count, int page_size) {
@@ -268,60 +263,12 @@ public class Browse extends HttpServlet {
     }
 
     private static String movieIdsByGenre(ArrayList<String> statement_parameters, String genre) {
-        ArrayList<String> adventure = new ArrayList<String>();
-        adventure.add("Adventure");
-        adventure.add("advanture");
-        ArrayList<String> epics = new ArrayList<String>();
-        epics.add("epics");
-        epics.add("Epics/Historial");
-        epics.add("Epics/Historical");
-        ArrayList<String> music = new ArrayList<String>();
-        music.add("Music");
-        music.add("Musical");
-        music.add("musial");
-        music.add("Musicals");
-        music.add("Musical/Performing Arts");
-        ArrayList<String> fantasy = new ArrayList<String>();
-        fantasy.add("Fantasy");
-        fantasy.add("Science Fiction/Fantasy");
-        ArrayList<String> scifi = new ArrayList<String>();
-        scifi.add("SciFi");
-        scifi.add("Science Fiction");
-        scifi.add("Sci-Fi");
-        scifi.add("SCI/FI");
-        scifi.add("Science Fiction/Fantasy");
-        ArrayList<String> western = new ArrayList<String>();
-        western.add("Western");
-        western.add("Westerns");
-        
-        Map<String, ArrayList<String>> genre_query = new HashMap<String, ArrayList<String>>();
-        genre_query.put("Adventure", adventure);
-        genre_query.put("epics", epics);
-        genre_query.put("Music", music);
-        genre_query.put("Fantasy", fantasy);
-        genre_query.put("SCIFI", scifi);
-        genre_query.put("Western", western);
-        
         String query = "(SELECT id FROM movies WHERE id IN (SELECT movie_id FROM genres_in_movies WHERE genre_id in (SELECT id FROM genres WHERE name=";
         boolean genre_exists = genre != null && genre.length() != 0;
         if (genre_exists) {
-            // Modified because genres are giving trouble
             statement_parameters.add(genre);
             return  "(SELECT id FROM movies WHERE id IN (SELECT movie_id FROM genres_in_movies WHERE genre_id in (SELECT id FROM genres WHERE name=?))) AND id IN ";
-            /*
-            if (genre_query.containsKey(genre)) {
-                for (String gen : genre_query.get(genre)) {
-                    statement_parameters.add(gen);
-                    query += "? OR name=";
-                }
-                // Remove trailing "' OR name="
-                query = query.substring(0, query.length() - 9);
-            } else {
-                query += "?";
-                statement_parameters.add(genre);
-            }*/
         } else { return ""; }
-        //return query + "))) AND id IN ";
     }
 
     private static String movieIdsOrder(String order_by, String order) {

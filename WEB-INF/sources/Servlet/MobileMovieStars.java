@@ -17,31 +17,26 @@ public class MobileMovieStars extends HttpServlet
     {
        return "Single Movie";
     }
-
-    public String getMovieStarsJSON(Star star) {
-        return "{\"id\":\"" + star.id() + "\"," +
-                "\"first_name\":\"" + star.first_name() + "\"," +
-                "\"last_name\":\"" + star.last_name() + "\"," +
-                "\"dob\":\"" + star.dob() + "\"," +
-                "\"photo_url\":\"" + star.photo_url() + "\"}";
-    }
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
             
-            Movie movie = new Movie(request.getParameter("movie_id"));
-            ArrayList<Star> stars = movie.getStars();
+            String movie_id = request.getParameter("movie_id");
+            ArrayList<String> statement_parameters = new ArrayList<String>();
+            statement_parameters.add(movie_id);
+
+            ArrayList<Movie> movies = DataSource.getMoviesForQuery("SELECT * FROM movies WHERE id=?;",statement_parameters);
 
             response.setContentType("text/html");
             PrintWriter writer = response.getWriter();
             String json = "[";
-            for(Star star: stars) {
-                json += getMovieStarsJSON(star) + ",";
+            for(Star star: movies.get(0).stars()) {
+                json += star.toJSON() + ",";
             }
             json = json.substring(0, json.length() - 1);
             json += "]";
             writer.print(json);
-            System.out.println(json);
+            System.out.println("JSON: " + json);
 
         } catch (Exception e) {
             // Error

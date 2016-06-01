@@ -14,7 +14,9 @@ import javax.servlet.http.*;
 public class Purchase extends HttpServlet {
 	
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // Get the session if it exists
         HttpSession session = request.getSession(false);
+        // Get the shopping cart
         ArrayList<CartItem> shopping_cart = (ArrayList<CartItem>) session.getAttribute("shopping_cart");
         
         if (shopping_cart == null || shopping_cart.size() == 0) {
@@ -49,12 +51,14 @@ public class Purchase extends HttpServlet {
             ArrayList<String> statement_parameters;
             for (CartItem item : shopping_cart) {
                 statement_parameters = new ArrayList<String>();
+                String insert = "INSERT INTO sales (customer_id, movie_id, sale_date) VALUES ";
                 for (int i = 0; i < item.quantity(); i++) {
-                    String insert = "INSERT INTO sales (customer_id, movie_id, sale_date) VALUES (?, ?, " + current_date + ");";
+                    insert += "(?, ?, " + current_date + "),";
                     statement_parameters.add(customer_id);
                     statement_parameters.add(item.movie_id());
-                    ds.executeUpdate(insert, statement_parameters);
                 }
+                insert = insert.substring(0,insert.length()-1);
+                ds.executeUpdate(insert, statement_parameters);
             }
             session.setAttribute("shopping_cart", null);
             session.setAttribute("success", "Enjoy your movie purchases!");

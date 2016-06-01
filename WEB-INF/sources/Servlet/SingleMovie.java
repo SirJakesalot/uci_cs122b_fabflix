@@ -20,12 +20,13 @@ public class SingleMovie extends HttpServlet
     
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
-            
-            Movie movie = new Movie(request.getParameter("movie_id"));
-            movie.getGenres();
-            movie.getStars();
+            String movie_id = request.getParameter("movie_id");
+            ArrayList<String> statement_parameters = new ArrayList<String>();
+            statement_parameters.add(movie_id);
 
-            request.setAttribute("movie", movie);
+            ArrayList<Movie> movies = DataSource.getMoviesForQuery("SELECT * FROM movies WHERE id=? LIMIT 1;",statement_parameters);
+
+            request.setAttribute("movie", movies.get(0));
             request.getRequestDispatcher("single_movie.jsp").forward(request, response);
         } catch (Exception e) {
             response.setContentType("text/html");

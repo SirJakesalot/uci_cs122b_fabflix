@@ -31,6 +31,7 @@ public class Login extends HttpServlet {
         String is_employee = request.getParameter("is_employee");
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
         boolean valid = VerifyUtils.verify(gRecaptchaResponse);
+
         if (!valid) {
             request.setAttribute("error", "Recaptcha Error");
             request.getRequestDispatcher("").forward(request, response);

@@ -23,11 +23,6 @@ public class ShoppingCart extends HttpServlet
         String increment = request.getParameter("increment");
         String quantity_str = request.getParameter("quantity");
 
-        // When there are unnecessary forward slashes at the end
-        /*if(movie_title!=null){movie_title=movie_title.replaceAll("/+$","");}
-        if(movie_id!=null){movie_id=movie_id.replaceAll("/+$","");}
-        if(amountStr!=null){amountStr=amountStr.replaceAll("/+$","");}*/
-
         int quantity = 0;
         try {
             quantity = Integer.parseInt(quantity_str);

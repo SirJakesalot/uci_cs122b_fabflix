@@ -33,14 +33,6 @@ public class MobileLogin extends HttpServlet {
         String email = request.getParameter("email");
         String password = request.getParameter("password");
 
-        /*
-        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
-        boolean valid = VerifyUtils.verify(gRecaptchaResponse);
-        if (!valid) {
-            request.setAttribute("error", "Recaptcha Error");
-            request.getRequestDispatcher("").forward(request, response);
-            return;
-        }*/
         response.setContentType("text/html");
         PrintWriter writer = response.getWriter();
         

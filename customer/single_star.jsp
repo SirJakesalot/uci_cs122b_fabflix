@@ -20,6 +20,10 @@
     <td>${star.last_name()}</td>
   </tr>
   <tr>
+    <td>DOB</td>
+    <td>${star.dob()}</td>
+  </tr>
+  <tr>
     <td>MOVIES</td>
     <td>
       <ul style="list-style: none;">

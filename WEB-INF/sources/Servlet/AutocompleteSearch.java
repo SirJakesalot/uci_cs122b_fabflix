@@ -26,7 +26,7 @@ public class AutocompleteSearch extends HttpServlet {
         }
         String loginUser = "root";
         String loginPasswd = "root";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb_project4";
+        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
         response.setContentType("text/html"); 
         PrintWriter out = response.getWriter();
         
@@ -70,28 +70,21 @@ public class AutocompleteSearch extends HttpServlet {
                      if(counter==total-1){
                         statement.setString(counter,"% " + token + "%");
                         statement.setString(counter+1, token + "%");
-                        //out.print("% " + token + "%" + "<br>");
-                        //out.print(token + "%" + "<br>");
                      } else {
                         statement.setString(counter,"% " + token + " %");
                         statement.setString(counter+1, token + " %");
-                        //out.print("% " + token + "%" + "<br>");
-                        //out.print("%" +token + "%" + "<br>");
                      }
                      counter += 2;
                   }
                   else {
                      if(counter==total){
                         statement.setString(counter,token+"*");
-                        //out.print(token+"*" + "<br>");
                      } else {
                         statement.setString(counter,token);
-                        //out.print(token + "<br>");
                      }
                      counter += 1;
                   }
               }
-              //out.println(Integer.toString());
               ResultSet rs = statement.executeQuery();
                          
               while(rs.next()){

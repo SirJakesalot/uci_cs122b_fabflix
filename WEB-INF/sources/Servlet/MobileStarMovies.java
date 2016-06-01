@@ -17,14 +17,6 @@ public class MobileStarMovies extends HttpServlet {
     public String getServletInfo() {
        return "Mobile Browse";
     }
-    public String getMovieJSON(Movie movie) {
-        return "{\"id\":\"" + movie.id() + "\"," +
-                "\"title\":\"" + movie.title() + "\"," +
-                "\"year\":\"" + movie.year() + "\"," +
-                "\"director\":\"" + movie.director() + "\"," +
-                "\"banner_url\":\"" + movie.banner_url() + "\"," +
-                "\"trailer_url\":\"" + movie.trailer_url() + "\"}";
-    }
 
     // Get all of the search attributes and construct a query based on those attributes. Then show movies that are relevant to that query.
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -32,17 +24,18 @@ public class MobileStarMovies extends HttpServlet {
         try {
             // Get parameters
             String star_id = request.getParameter("star_id");
-            System.out.println("Getting star");
-            Star star = new Star(star_id);
+
+            ArrayList<String> statement_parameters = new ArrayList<String>();
+            statement_parameters.add(star_id);
+
+            ArrayList<Star> stars = DataSource.getStarsForQuery("SELECT * FROM stars WHERE id=?;",statement_parameters);
 
             // Get the movies for the page and their associated stars
-            System.out.println("Getting star movies");
-            ArrayList<Movie> movies = star.getMovies();
             response.setContentType("text/html");
             PrintWriter writer = response.getWriter();
             String json = "[";
-            for(Movie movie: movies) {
-                json += getMovieJSON(movie) + ",";
+            for(Movie movie: stars.get(0).movies()) {
+                json += movie.toJSON() + ",";
             }
             json += "]";
             writer.print(json);

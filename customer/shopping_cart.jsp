@@ -4,7 +4,6 @@
 
 <c:forEach var="item" items="${sessionScope.shopping_cart}">
   <form class="shopping_cart" action="shopping_cart" method="GET">
-    <!--<fieldset class="field_entry">-->
     <fieldset class="field_entry"> 
       <legend>Cart Item</legend>
       <table>
@@ -16,7 +15,9 @@
           <th>Movie Title</th>
           <td>
           <span class="anchor" >
-            <a onmouseover="showbox('${context}','${item.movie_id()}')" onmouseout="hidebox('${item.movie_id()}')" href="${context}/customer/single_movie?movie_id=${item.movie_id()}">${item.movie_title()}</a>
+            <a onmouseover="showbox('${context}','${item.movie_id()}')" onmouseout="hidebox('${item.movie_id()}')" href="${context}/customer/single_movie?movie_id=${item.movie_id()}">
+              <input name="movie_title" type='text' value="${item.movie_title()}" readonly/>
+            </a>
             <span id="${item.movie_id()}" class="hide"></span>
           </span>
           </td>
