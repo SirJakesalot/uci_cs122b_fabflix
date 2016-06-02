@@ -1,5 +1,5 @@
 import moviedb_model.Star;
-import moviedb_model.DataSource;
+import moviedb_model.DataModel;
 
 import java.io.*;
 import java.net.*;
@@ -21,7 +21,9 @@ public class SingleStar extends HttpServlet {
             ArrayList<String> statement_parameters = new ArrayList<String>();
             statement_parameters.add(star_id);
 
-            ArrayList<Star> stars = DataSource.getStarsForQuery("SELECT * FROM stars WHERE id=? LIMIT 1;",statement_parameters);
+            DataModel dm = new DataModel();
+            ArrayList<Star> stars = dm.getStarsForQuery("SELECT * FROM stars WHERE id=? LIMIT 1;",statement_parameters);
+            dm.closeConnection();
 
             request.setAttribute("star", stars.get(0));
             request.getRequestDispatcher("single_star.jsp").forward(request,response);
@@ -34,7 +36,7 @@ public class SingleStar extends HttpServlet {
             PrintWriter out = response.getWriter();
             out.println("<HTML><HEAD><TITLE>Main Error</TITLE></HEAD>");
             out.println(e.toString());
-            DataSource.logError("SingleStar doGet", e);
+            DataModel.logError("SingleStar doGet", e);
         } 
     }
 

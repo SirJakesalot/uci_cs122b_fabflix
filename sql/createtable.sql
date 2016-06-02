@@ -73,7 +73,7 @@ CREATE TABLE sales (
     id INTEGER NOT NULL AUTO_INCREMENT,
     customer_id INTEGER NOT NULL,
     movie_id INTEGER NOT NULL,
-    sale_DATE DATE NOT NULL,
+    sale_date DATE NOT NULL,
     PRIMARY KEY(id),
     FOREIGN KEY(customer_id) REFERENCES customers(id) ON DELETE CASCADE,
     FOREIGN KEY(movie_id) REFERENCES movies(id) ON DELETE CASCADE

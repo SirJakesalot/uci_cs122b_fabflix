@@ -17,7 +17,7 @@ public class Genre {
             this.id = rs.getString("id");
             this.name = rs.getString("name");
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Genre", se);
+            DataModel.logError("ERROR: Genre", se);
         }
     }
 

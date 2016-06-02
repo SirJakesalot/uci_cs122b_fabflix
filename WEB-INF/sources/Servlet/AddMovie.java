@@ -1,6 +1,6 @@
 /* A servlet to display the contents of the MySQL movieDB database */
 
-import moviedb_model.DataSource;
+import moviedb_model.DataModel;
 
 import java.io.*;
 import java.net.*;
@@ -43,8 +43,8 @@ public class AddMovie extends HttpServlet {
                 // Invalid Year
             }
             
-            DataSource ds = new DataSource();
-            Connection conn = ds.getConnection();
+            DataModel dm = new DataModel();
+            Connection conn = dm.getConnection();
 
             CallableStatement call = conn.prepareCall("{CALL add_movie(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             call.setString(1, movie_title);
@@ -76,7 +76,7 @@ public class AddMovie extends HttpServlet {
             session.setAttribute("star_movie_link", call.getInt(13) != 0 ? "Star already linked to Movie" : "Added Star to Movie link");
             session.setAttribute("genre_movie_link", call.getInt(14) != 0 ? "Genre already linked to Movie" : "Added Genre to Movie link");
 
-            ds.closeQuery();
+            dm.closeConnection();
             response.sendRedirect("employee/_dashboard");
 
         } catch (Exception e) {

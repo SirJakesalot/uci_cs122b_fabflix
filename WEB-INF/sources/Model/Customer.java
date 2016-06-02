@@ -31,7 +31,7 @@ public class Customer {
             this.email = rs.getString("email");
             this.password = rs.getString("password");
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Customer", se);
+            DataModel.logError("ERROR: Customer", se);
         }
     }
 
@@ -61,22 +61,21 @@ public class Customer {
         
         Customer customer = null;
         // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
+        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
         
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
+            if (dm.rs.isBeforeFirst()) {
                 //System.out.println("ResultSet is not empty");
-                ds.rs.next();
-                customer = new Customer(ds.rs);
+                dm.rs.next();
+                customer = new Customer(dm.rs);
             }
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Customer login", se);
-        } finally {
-            ds.closeQuery();
+            DataModel.logError("ERROR: Customer login", se);
         }
+        dm.closeConnection();
         return customer;
     }
 

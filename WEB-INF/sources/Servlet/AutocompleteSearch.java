@@ -1,5 +1,5 @@
 import moviedb_model.Customer;
-import moviedb_model.DataSource;
+import moviedb_model.DataModel;
 
 import java.io.*;
 import java.net.*;
@@ -10,112 +10,72 @@ import javax.servlet.*;
 import javax.servlet.http.*;
 
 public class AutocompleteSearch extends HttpServlet {
-   
-    public String[] stopWords = new String[] {"a","an","as","at","b","be","by","de",
-                              "e","en","i","in","is","it","la","o","of","on","or","t","to"};
+
+    private final String[] stop_words_array = new String[] {"a","an","as","at","b","be","by","de", "e","en","i","in","is","it","la","o","of","on","or","t","to"};
+    private final Set<String> stop_words_set = new HashSet<String>(Arrays.asList(stop_words_array)); 
 
     public String getServletInfo() {
-        return "ajax";
+        return "Autocomplete";
     }
 
-    // Redirects the user to the login page
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        Customer customer = (Customer) request.getSession().getAttribute("customer");
-        if (customer == null) {
-            response.sendRedirect("");
-        }
-        String loginUser = "root";
-        String loginPasswd = "root";
-        String loginUrl = "jdbc:mysql://localhost:3306/moviedb";
-        response.setContentType("text/html"); 
-        PrintWriter out = response.getWriter();
-        
-        try {
-              Class.forName("com.mysql.jdbc.Driver").newInstance();
-              Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-              String preparestat = "SELECT title from movies WHERE id IN ( SELECT id from movies WHERE ";
-              
-              String outputStr = "";
-              
-              String title = request.getParameter("title");
-              
-              if(title==null||"".equals(title)){out.print("");return;}
-              
-              String[] ptitle = title.split("\\s+");
-              int lengthTokens = ptitle.length;
-              //out.print(Integer.toString(lengthTokens));
-              int total = 0;
-              for(String token : ptitle){
-                  if(Arrays.asList(stopWords).contains(token.toLowerCase())){
-                     preparestat += " (title LIKE ? OR title LIKE ?) AND ";
-                     total += 2;
-                  } else {
-                     preparestat += " MATCH (title) AGAINST (? IN BOOLEAN MODE) AND ";
-                     total += 1;  
-                  }      
-              }
-              if (lengthTokens > 0){
-                  preparestat = preparestat.substring(0,preparestat.length()-5);
-                  preparestat += ") LIMIT 5;";
-              } else {
-                  out.print("");return;
-              }
-              PreparedStatement statement = dbcon.prepareStatement(preparestat);
-              
-              //out.println(preparestat);
-              
-              int counter = 1;
-              for(String token : ptitle){
-                  if(Arrays.asList(stopWords).contains(token.toLowerCase())){
-                     if(counter==total-1){
-                        statement.setString(counter,"% " + token + "%");
-                        statement.setString(counter+1, token + "%");
-                     } else {
-                        statement.setString(counter,"% " + token + " %");
-                        statement.setString(counter+1, token + " %");
-                     }
-                     counter += 2;
-                  }
-                  else {
-                     if(counter==total){
-                        statement.setString(counter,token+"*");
-                     } else {
-                        statement.setString(counter,token);
-                     }
-                     counter += 1;
-                  }
-              }
-              ResultSet rs = statement.executeQuery();
-                         
-              while(rs.next()){
-                  outputStr += rs.getString("title") + "_!_";
-              }
-              if(outputStr.length() >= 3){
-                  outputStr = outputStr.substring(0,outputStr.length()-3);
-              }
-              out.print(outputStr);
-              statement.close();
-              dbcon.close();
-              
-        }catch (SQLException ex) {
-              while (ex != null) {
-                    System.out.println ("SQL Exception:  " + ex.getMessage ());
-                    ex = ex.getNextException ();
-                }  // end while
-        }  // end catch SQLException
+        String autocomplete_title = request.getParameter("autocomplete_title");
+        System.out.println("AutocompleteTitle: " + autocomplete_title);
+        if (autocomplete_title == null || "".equals(autocomplete_title)) { return; }
 
-        catch(java.lang.Exception ex)
-        {
-                out.println("<HTML>" +
-                            "<HEAD><TITLE>" +
-                            "MovieDB: Error" +
-                            "</TITLE></HEAD>\n<BODY>" +
-                            "<P>SQL error in doGet: " +
-                            ex.getMessage() + "</P></BODY></HTML>");
-                return;
-        }
-        out.close();
+        String[] tokens = autocomplete_title.split("\\s+");
 
+        String query = "SELECT title from movies WHERE id IN (SELECT id from movies WHERE ";
+        ArrayList<String> statement_parameters = new ArrayList<String>();
+
+        // Build the query and count the number of parameters
+        int param_count = 0;
+        for(String token : tokens){
+            if(stop_words_set.contains(token.toLowerCase())){
+                query += " (title LIKE ? OR title LIKE ?) AND ";
+                param_count += 2;
+            } else {
+                query += " MATCH (title) AGAINST (? IN BOOLEAN MODE) AND ";
+                param_count += 1;  
+            }      
+        }
+        // Remove the trailing ' AND '
+        if (tokens.length > 0){
+            query = query.substring(0,query.length()-5);
+            query += ") LIMIT 5;";
+        } else {
+            return;
+        }
+
+        int counter = 1;
+        for (String token : tokens) {
+            if (stop_words_set.contains(token.toLowerCase())) {
+                if (counter == param_count - 1){
+                    statement_parameters.add("% " + token + "%");
+                    statement_parameters.add(token + "%");
+                } else {
+                    statement_parameters.add("% " + token + " %");
+                    statement_parameters.add(token + " %");
+                }
+                counter += 2;
+            } else {
+                if (counter == param_count){
+                    statement_parameters.add(token + "*");
+                } else {
+                    statement_parameters.add(token);
+                }
+                counter += 1;
+            }
+        }
+        DataModel dm = new DataModel();
+        ArrayList<String> autocomplete_titles = dm.getStringsForQuery(query, statement_parameters, "title");
+        dm.closeConnection();
+
+        request.setAttribute("autocomplete_titles", autocomplete_titles);
+        request.getRequestDispatcher("/customer/autocomplete_search.jsp").forward(request,response);
+    }
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        doGet(request, response);
     }
 }
 

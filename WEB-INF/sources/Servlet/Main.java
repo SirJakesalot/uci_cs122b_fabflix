@@ -1,5 +1,5 @@
 import moviedb_model.Genre;
-import moviedb_model.DataSource;
+import moviedb_model.DataModel;
 
 import java.io.*;
 import java.net.*;
@@ -18,7 +18,10 @@ public class Main extends HttpServlet {
 
     // Populate an ArrayList with all Genre objects and redirect to main.jsp
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        ArrayList<Genre> genres = DataSource.getGenresForQuery("SELECT * FROM genres ORDER BY name", new ArrayList<String>());
+        DataModel dm = new DataModel();
+        ArrayList<Genre> genres = dm.getGenresForQuery("SELECT * FROM genres ORDER BY name", new ArrayList<String>());
+        dm.closeConnection();
+
         request.setAttribute("genres", genres);
         request.getRequestDispatcher("/customer/main.jsp").forward(request,response);
     }

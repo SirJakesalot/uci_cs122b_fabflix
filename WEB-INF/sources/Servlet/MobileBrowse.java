@@ -1,7 +1,7 @@
 import moviedb_model.Star;
 import moviedb_model.Genre;
 import moviedb_model.Movie;
-import moviedb_model.DataSource;
+import moviedb_model.DataModel;
 
 import java.io.*;
 import java.net.*;
@@ -44,7 +44,9 @@ public class MobileBrowse extends HttpServlet {
             movie_query += ")";
             movie_count_query += ")";
 
-            int movie_count = DataSource.getQueryCount(movie_count_query, statement_parameters);
+            DataModel dm = new DataModel();
+            int movie_count = dm.getQueryCount(movie_count_query, statement_parameters);
+            dm.closeStatement();
 
             // Get movies for the current page
             int page_count = getPageCount(movie_count, page_size);
@@ -59,7 +61,8 @@ public class MobileBrowse extends HttpServlet {
             movie_query += movieIdsRange(page, page_size, movie_count);
 
             // Get the movies for the page and their associated stars
-            ArrayList<Movie> movies = DataSource.getMoviesForQuery(movie_query, statement_parameters);
+            ArrayList<Movie> movies = dm.getMoviesForQuery(movie_query, statement_parameters);
+            dm.closeConnection();
             response.setContentType("text/html");
             PrintWriter writer = response.getWriter();
             String json = "[{\"movie_count\":\"" + movie_count + "\"}";

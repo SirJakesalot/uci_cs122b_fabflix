@@ -29,7 +29,7 @@ public class Star {
             this.dob = rs.getString("dob");
             this.photo_url = rs.getString("photo_url");
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Star", se);
+            DataModel.logError("ERROR: Star", se);
         }
     }
 

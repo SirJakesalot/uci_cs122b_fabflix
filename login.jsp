@@ -37,11 +37,11 @@
         <table>
           <tr>
             <th>Email</th>
-            <td><input type="text" name="email" required="required"/></td>
+            <td><input type="text" name="email" required="required" value="jack@ics.com"/></td>
           </tr>
           <tr>
             <th>Password</td>
-            <td><input type="password" name="password" required="required"/></td>
+            <td><input type="password" name="password" required="required" value="jack" /></td>
           </tr>
           <tr>
             <th>Are you an employee?</th>

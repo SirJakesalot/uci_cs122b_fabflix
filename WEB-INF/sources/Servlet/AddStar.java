@@ -1,7 +1,7 @@
 /* A servlet to display the contents of the MySQL movieDB database */
 
 import moviedb_model.Genre;
-import moviedb_model.DataSource;
+import moviedb_model.DataModel;
 
 import java.io.*;
 import java.net.*;
@@ -31,8 +31,8 @@ public class AddStar extends HttpServlet {
             statement_parameters.add(first_name);
             statement_parameters.add(last_name);
 
-            DataSource ds = new DataSource();
-            int rows_affected = ds.executeUpdate(update, statement_parameters);
+            DataModel dm = new DataModel();
+            int rows_affected = dm.executeUpdate(update, statement_parameters);
             switch (rows_affected) {
                 case 0:
                     session.setAttribute("error", "Invalid Star Information");
@@ -43,7 +43,7 @@ public class AddStar extends HttpServlet {
                 default:
                     session.setAttribute("success", "Number of rows were affected: " + rows_affected);
             }
-            ds.closeQuery();
+            dm.closeConnection();
             response.sendRedirect("employee/_dashboard");
         } catch (Exception e) {
             session.setAttribute("error", "Error: " + e.toString());

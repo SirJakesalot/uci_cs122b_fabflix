@@ -1,7 +1,7 @@
 import moviedb_model.CreditCard;
 import moviedb_model.Customer;
 import moviedb_model.CartItem;
-import moviedb_model.DataSource;
+import moviedb_model.DataModel;
 
 import java.io.*;
 import java.net.*;
@@ -45,7 +45,7 @@ public class Purchase extends HttpServlet {
         current_month = calendar.get(Calendar.MONTH) + 1; // month start from 0 to 11
         String current_date = current_year + "/" + current_month + "/" + current_day;
 
-        DataSource ds = new DataSource();
+        DataModel dm = new DataModel();
 
         try {
             ArrayList<String> statement_parameters;
@@ -53,12 +53,12 @@ public class Purchase extends HttpServlet {
                 statement_parameters = new ArrayList<String>();
                 String insert = "INSERT INTO sales (customer_id, movie_id, sale_date) VALUES ";
                 for (int i = 0; i < item.quantity(); i++) {
-                    insert += "(?, ?, " + current_date + "),";
+                    insert += "(?, ?, '" + current_date + "'),";
                     statement_parameters.add(customer_id);
                     statement_parameters.add(item.movie_id());
                 }
                 insert = insert.substring(0,insert.length()-1);
-                ds.executeUpdate(insert, statement_parameters);
+                dm.executeUpdate(insert, statement_parameters);
             }
             session.setAttribute("shopping_cart", null);
             session.setAttribute("success", "Enjoy your movie purchases!");

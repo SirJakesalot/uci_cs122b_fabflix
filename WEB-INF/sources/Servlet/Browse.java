@@ -2,7 +2,7 @@ import moviedb_model.Customer;
 import moviedb_model.Star;
 import moviedb_model.Genre;
 import moviedb_model.Movie;
-import moviedb_model.DataSource;
+import moviedb_model.DataModel;
 
 import java.io.*;
 import java.net.*;
@@ -70,7 +70,10 @@ public class Browse extends HttpServlet {
 
             movie_count_query += search_requirements;
             // Executes the query to get the count
-            int movie_count = DataSource.getQueryCount(movie_count_query, statement_parameters);
+            DataModel dm = new DataModel();
+            int movie_count = dm.getQueryCount(movie_count_query, statement_parameters);
+            // Close resultset and statement
+            dm.closeStatement();
 
             // Add the order
             search_requirements += movieIdsOrder(order_by, order);
@@ -91,7 +94,9 @@ public class Browse extends HttpServlet {
             movie_query += search_requirements;
 
             // Get the movies for the page and their associated stars
-            ArrayList<Movie> movies = DataSource.getMoviesForQuery(movie_query, statement_parameters);
+            ArrayList<Movie> movies = dm.getMoviesForQuery(movie_query, statement_parameters);
+            // Close all open connections
+            dm.closeConnection();
 
             // The search requirements given they had no results
             if (movies == null) {

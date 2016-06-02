@@ -19,7 +19,7 @@ public class Employee {
             this.password = rs.getString("password");
             this.fullname = rs.getString("fullname");
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Employee", se);
+            DataModel.logError("ERROR: Employee", se);
         }
     }
 
@@ -41,22 +41,21 @@ public class Employee {
         
         Employee employee = null;
         // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
+        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
         
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
+            if (dm.rs.isBeforeFirst()) {
                 //System.out.println("ResultSet is not empty");
-                ds.rs.next();
-                employee = new Employee(ds.rs);
+                dm.rs.next();
+                employee = new Employee(dm.rs);
             }
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Employee login", se);
-        } finally {
-            ds.closeQuery();
+            DataModel.logError("ERROR: Employee login", se);
         }
+        dm.closeConnection();
         return employee;
     }
 

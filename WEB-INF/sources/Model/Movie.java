@@ -36,7 +36,7 @@ public class Movie {
             this.banner_url = rs.getString("banner_url");
             this.trailer_url = rs.getString("trailer_url");
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Movie resultset", se);
+            DataModel.logError("ERROR: Movie resultset", se);
         }
     }
     public Movie(String movie_id) {
@@ -46,24 +46,22 @@ public class Movie {
         statement_parameters.add(movie_id);
 
         // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
+        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                ds.rs.next();
-                this.id = ds.rs.getString("id");
-                this.title = ds.rs.getString("title");
-                this.year = ds.rs.getString("year");
-                this.director = ds.rs.getString("director");
-                this.banner_url = ds.rs.getString("banner_url");
-                this.trailer_url = ds.rs.getString("trailer_url");
+            if (dm.rs.isBeforeFirst()) {
+                dm.rs.next();
+                this.id = dm.rs.getString("id");
+                this.title = dm.rs.getString("title");
+                this.year = dm.rs.getString("year");
+                this.director = dm.rs.getString("director");
+                this.banner_url = dm.rs.getString("banner_url");
+                this.trailer_url = dm.rs.getString("trailer_url");
             }
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Movie movie_id", se);
-        } finally {
-            ds.closeQuery();
+            DataModel.logError("ERROR: Movie movie_id", se);
         }
     }
 

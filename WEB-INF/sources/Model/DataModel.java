@@ -5,14 +5,15 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-public class DataModel {
-    // JDBC driver name and database url
-    private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
-    private static final String DB_URL = "jdbc:mysql:///";
+import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 
-    private static final String DB = "moviedb";
-    private static final String USR = "root";
-    private static final String PASS = "root";
+public class DataModel {
+
+    //@Resource(name="jdbc/moviedb", type=javax.sql.DataSource.class)
 
     public Connection conn = null;
     public PreparedStatement stmt = null;
@@ -31,9 +32,12 @@ public class DataModel {
     // Creates a mysql connection 
     public Connection getConnection() {
         try {
-            Class.forName(JDBC_DRIVER).newInstance();
-
-            return DriverManager.getConnection(DB_URL + DB, USR, PASS); 
+            Context initCtx = new InitialContext();
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+            conn = ds.getConnection(); 
+            return conn;
+            //return ds.getConnection();
         } catch (Exception e) {
             logError("ERROR: DataModel getConnection", e);
             return null;
@@ -84,13 +88,13 @@ public class DataModel {
     }
 
     // Close all open connections
-    public void closeQuery() {
+    public void closeConnection() {
         try {
             if (rs != null) { rs.close(); }
             if (stmt != null) { stmt.close(); }
             if (conn != null) { conn.close(); }
         } catch (SQLException se) {
-            logError("ERROR: DataModel closeQuery", se);
+            logError("ERROR: DataModel closeConnections", se);
         }
     }
 
@@ -105,33 +109,31 @@ public class DataModel {
     }
 
     // Return the movies for the given query
-    public static ArrayList<Movie> getMoviesForQuery(String query, ArrayList<String> statement_parameters) {
+    public ArrayList<Movie> getMoviesForQuery(String query, ArrayList<String> statement_parameters) {
         ArrayList<Movie> movies = new ArrayList<Movie>();
-        // Manages opening/closing the connections to the database
-        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        dm.executeQuery(query, statement_parameters);
+        executeQuery(query, statement_parameters);
         try {
             // If the query was not empty
-            if (dm.rs.isBeforeFirst()) {
-                while (dm.rs.next()) {
-                    Movie movie = new Movie(dm.rs);
-                    getMovieGenres(dm, movie);
-                    getMovieStars(dm, movie);
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    Movie movie = new Movie(rs);
+                    closeStatement();
+                    getMovieGenres(movie);
+                    closeStatement();
+                    getMovieStars(movie);
                     movies.add(movie);
                 }
             } else {
                 return null;
             }
         } catch (SQLException se) {
-            DataModel.logError("ERROR: Movie getMoviesForQuery", se);
-        } finally {
-            dm.closeQuery();
+            logError("ERROR: Movie getMoviesForQuery", se);
         }
         return movies;
     }
 
-    private static void getMovieGenres(DataModel dm, Movie movie) {
+    private void getMovieGenres(Movie movie) {
         if (movie.id() == null) { return; }
 
         ArrayList<Genre> genres = new ArrayList<Genre>();
@@ -140,24 +142,21 @@ public class DataModel {
         statement_parameters.add(movie.id());
 
         // Execute the query
-        dm.executeQuery(query, statement_parameters);
+        executeQuery(query, statement_parameters);
 
         try {
             // If the query was not empty
-            if (dm.rs.isBeforeFirst()) {
-                while (dm.rs.next()) {
-                    genres.add(new Genre(dm.rs));
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    genres.add(new Genre(rs));
                 }
                 movie.genres(genres);
             }
         } catch (SQLException se) {
-            dm.logError("ERROR: DataModel getMovieGenres", se);
-        } finally {
-            // Close resultset and statement for genres
-            dm.closeStatement();
+            logError("ERROR: DataModel getMovieGenres", se);
         }
     }
-    private static void getMovieStars(DataModel dm, Movie movie) {
+    private void getMovieStars(Movie movie) {
         if (movie.id() == null) { return; }
 
         ArrayList<Star> stars = new ArrayList<Star>();
@@ -166,52 +165,45 @@ public class DataModel {
         statement_parameters.add(movie.id());
 
         // Open a connection and execute the query
-        dm.executeQuery(query, statement_parameters);
+        executeQuery(query, statement_parameters);
 
         try {
             // If the query was not empty
-            if (dm.rs.isBeforeFirst()) {
-                while (dm.rs.next()) {
-                    stars.add(new Star(dm.rs));
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    stars.add(new Star(rs));
                 }
                 movie.stars(stars);
             }
         } catch (SQLException se) {
-            dm.logError("ERROR: DataModel getMovieStars", se);
-        } finally {
-            // Close all open connections
-            dm.closeStatement();
+            logError("ERROR: DataModel getMovieStars", se);
         }
     }
 
-
-    // Return the movies for the given query
-    public static ArrayList<Star> getStarsForQuery(String query, ArrayList<String> statement_parameters) {
+    // Return the Stars for the given query
+    public ArrayList<Star> getStarsForQuery(String query, ArrayList<String> statement_parameters) {
         ArrayList<Star> stars = new ArrayList<Star>();
-        // Manages opening/closing the connections to the database
-        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        dm.executeQuery(query, statement_parameters);
+        executeQuery(query, statement_parameters);
         try {
             // If the query was not empty
-            if (dm.rs.isBeforeFirst()) {
-                while (dm.rs.next()) {
-                    Star star = new Star(dm.rs);
-                    getStarMovies(dm, star);
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    Star star = new Star(rs);
+                    closeStatement();
+                    getStarMovies(star);
                     stars.add(star);
                 }
             } else {
                 return null;
             }
         } catch (SQLException se) {
-            DataModel.logError("ERROR: DataModel getStarsForQuery", se);
-        } finally {
-            dm.closeQuery();
+            logError("ERROR: DataModel getStarsForQuery", se);
         }
         return stars;
     }
 
-    private static void getStarMovies(DataModel dm, Star star) {
+    private void getStarMovies(Star star) {
         if (star.id() == null) { return; }
 
         ArrayList<Movie> movies = new ArrayList<Movie>();
@@ -221,67 +213,76 @@ public class DataModel {
         statement_parameters.add(star.id());
 
         // Open a connection and execute the query
-        dm.executeQuery(query, statement_parameters);
+        executeQuery(query, statement_parameters);
 
         try {
             // If the query was not empty
-            if (dm.rs.isBeforeFirst()) {
-                while (dm.rs.next()) {
-                    movies.add(new Movie(dm.rs));
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    movies.add(new Movie(rs));
                 }
                 star.movies(movies);
             }
         } catch (SQLException se) {
-            dm.logError("ERROR: DataModel getStarMovies", se);
-        } finally {
-            // Close all open connections
-            dm.closeStatement();
+            logError("ERROR: DataModel getStarMovies", se);
         }
     }
 
 
     // Return the genres for the given query
-    public static ArrayList<Genre> getGenresForQuery(String query, ArrayList<String> statement_parameters) {
+    public ArrayList<Genre> getGenresForQuery(String query, ArrayList<String> statement_parameters) {
         ArrayList<Genre> genres = new ArrayList<Genre>();
-        // Manages opening/closing the connections to the database
-        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        dm.executeQuery(query, statement_parameters);
+        executeQuery(query, statement_parameters);
         try {
             // If the query was not empty
-            if (dm.rs.isBeforeFirst()) {
-                while (dm.rs.next()) {
-                    genres.add(new Genre(dm.rs));
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    genres.add(new Genre(rs));
                 }
             } else {
                 return null;
             }
         } catch (SQLException se) {
-            DataModel.logError("ERROR: Movie getGenresForQuery", se);
-        } finally {
-            dm.closeQuery();
+            logError("ERROR: DataModel getGenresForQuery", se);
         }
         return genres;
     }
 
     // Return the number of table entries for the given query
-    public static int getQueryCount(String query, ArrayList<String> statement_parameters) {
+    public int getQueryCount(String query, ArrayList<String> statement_parameters) {
         int count = 0;
-        // Manages opening/closing the connections to the database
-        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        dm.executeQuery(query, statement_parameters);
+        executeQuery(query, statement_parameters);
         try {
             // If the query was not empty
-            if (dm.rs.isBeforeFirst()) {
-                dm.rs.next();
-                count = dm.rs.getInt(1);
+            if (rs.isBeforeFirst()) {
+                rs.next();
+                count = rs.getInt(1);
             }
         } catch (SQLException se) {
-            DataModel.logError("ERROR: DataModel getQueryCount", se);
-        } finally {
-            dm.closeQuery();
+            logError("ERROR: DataModel getQueryCount", se);
         }
         return count;
+    }
+
+    // Return the genres for the given query
+    public ArrayList<String> getStringsForQuery(String query, ArrayList<String> statement_parameters, String column) {
+        ArrayList<String> strings = new ArrayList<String>();
+        // Open a connection and execute the query
+        executeQuery(query, statement_parameters);
+        try {
+            // If the query was not empty
+            if (rs.isBeforeFirst()) {
+                while (rs.next()) {
+                    strings.add(rs.getString(column));
+                }
+            } else {
+                return null;
+            }
+        } catch (SQLException se) {
+            logError("ERROR: DataModel getStringsForQuery", se);
+        }
+        return strings;
     }
 }

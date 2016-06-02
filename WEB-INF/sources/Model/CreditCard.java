@@ -13,20 +13,19 @@ public class CreditCard {
         statement_parameters.add(experation_date);
 
         // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
+        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
         // If an entry exists with that information, payment is acceptable
         boolean payment_accepted = false;
         try {
             // Entry exists
-            if (ds.rs.isBeforeFirst()) {
+            if (dm.rs.isBeforeFirst()) {
                 payment_accepted = true;
             }
         } catch (SQLException se) {
-            DataSource.logError("ERROR: CreditCard check", se);
+            DataModel.logError("ERROR: CreditCard check", se);
         }
-        ds.closeQuery();
         return payment_accepted;
     }
 }

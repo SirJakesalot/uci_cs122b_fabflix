@@ -1,7 +1,7 @@
 import moviedb_model.Star;
 import moviedb_model.Genre;
 import moviedb_model.Movie;
-import moviedb_model.DataSource;
+import moviedb_model.DataModel;
 
 import java.io.*;
 import java.net.*;
@@ -28,7 +28,9 @@ public class MobileStarMovies extends HttpServlet {
             ArrayList<String> statement_parameters = new ArrayList<String>();
             statement_parameters.add(star_id);
 
-            ArrayList<Star> stars = DataSource.getStarsForQuery("SELECT * FROM stars WHERE id=?;",statement_parameters);
+            DataModel dm = new DataModel();
+            ArrayList<Star> stars = dm.getStarsForQuery("SELECT * FROM stars WHERE id=?;",statement_parameters);
+            dm.closeConnection();
 
             // Get the movies for the page and their associated stars
             response.setContentType("text/html");
