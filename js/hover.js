@@ -10,8 +10,9 @@ function showbox(context, x) {
     xhttp.send();
 }
 function hidebox(x) {
-var delay= 1800;
-timer= setTimeout( function(){
+    //var delay= 1800;
+    //timer= setTimeout( function() {
+    //    document.getElementById(x).style.display = 'none';
+    //}, delay);
     document.getElementById(x).style.display = 'none';
-}, delay);
 }

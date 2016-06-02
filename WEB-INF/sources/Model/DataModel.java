@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.*;
 import java.net.*;
 
-public class DataSource {
+public class DataModel {
     // JDBC driver name and database url
     private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql:///";
@@ -18,7 +18,7 @@ public class DataSource {
     public PreparedStatement stmt = null;
     public ResultSet rs = null;
 
-    public DataSource() {
+    public DataModel() {
         this.conn = getConnection(); 
     }
     
@@ -35,7 +35,7 @@ public class DataSource {
 
             return DriverManager.getConnection(DB_URL + DB, USR, PASS); 
         } catch (Exception e) {
-            logError("ERROR: DataSource getConnection", e);
+            logError("ERROR: DataModel getConnection", e);
             return null;
         }
     }
@@ -57,7 +57,7 @@ public class DataSource {
             rs = stmt.executeQuery();
 
         } catch (SQLException se) {
-            logError("ERROR: DataSource executeQuery", se);
+            logError("ERROR: DataModel executeQuery", se);
         }
     }
 
@@ -78,7 +78,7 @@ public class DataSource {
             return stmt.executeUpdate();
 
         } catch (SQLException se) {
-            logError("ERROR: DataSource executeUpdate", se);
+            logError("ERROR: DataModel executeUpdate", se);
         }
         return 0;
     }
@@ -90,7 +90,7 @@ public class DataSource {
             if (stmt != null) { stmt.close(); }
             if (conn != null) { conn.close(); }
         } catch (SQLException se) {
-            logError("ERROR: DataSource closeQuery", se);
+            logError("ERROR: DataModel closeQuery", se);
         }
     }
 
@@ -100,7 +100,7 @@ public class DataSource {
             if (rs != null) { rs.close(); }
             if (stmt != null) { stmt.close(); }
         } catch (SQLException se) {
-            logError("ERROR: DataSource closeStatement", se);
+            logError("ERROR: DataModel closeStatement", se);
         }
     }
 
@@ -108,30 +108,30 @@ public class DataSource {
     public static ArrayList<Movie> getMoviesForQuery(String query, ArrayList<String> statement_parameters) {
         ArrayList<Movie> movies = new ArrayList<Movie>();
         // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
+        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    Movie movie = new Movie(ds.rs);
-                    getMovieGenres(ds, movie);
-                    getMovieStars(ds, movie);
+            if (dm.rs.isBeforeFirst()) {
+                while (dm.rs.next()) {
+                    Movie movie = new Movie(dm.rs);
+                    getMovieGenres(dm, movie);
+                    getMovieStars(dm, movie);
                     movies.add(movie);
                 }
             } else {
                 return null;
             }
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Movie getMoviesForQuery", se);
+            DataModel.logError("ERROR: Movie getMoviesForQuery", se);
         } finally {
-            ds.closeQuery();
+            dm.closeQuery();
         }
         return movies;
     }
 
-    private static void getMovieGenres(DataSource ds, Movie movie) {
+    private static void getMovieGenres(DataModel dm, Movie movie) {
         if (movie.id() == null) { return; }
 
         ArrayList<Genre> genres = new ArrayList<Genre>();
@@ -140,24 +140,24 @@ public class DataSource {
         statement_parameters.add(movie.id());
 
         // Execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
 
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    genres.add(new Genre(ds.rs));
+            if (dm.rs.isBeforeFirst()) {
+                while (dm.rs.next()) {
+                    genres.add(new Genre(dm.rs));
                 }
                 movie.genres(genres);
             }
         } catch (SQLException se) {
-            ds.logError("ERROR: DataSource getMovieGenres", se);
+            dm.logError("ERROR: DataModel getMovieGenres", se);
         } finally {
             // Close resultset and statement for genres
-            ds.closeStatement();
+            dm.closeStatement();
         }
     }
-    private static void getMovieStars(DataSource ds, Movie movie) {
+    private static void getMovieStars(DataModel dm, Movie movie) {
         if (movie.id() == null) { return; }
 
         ArrayList<Star> stars = new ArrayList<Star>();
@@ -166,21 +166,21 @@ public class DataSource {
         statement_parameters.add(movie.id());
 
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
 
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    stars.add(new Star(ds.rs));
+            if (dm.rs.isBeforeFirst()) {
+                while (dm.rs.next()) {
+                    stars.add(new Star(dm.rs));
                 }
                 movie.stars(stars);
             }
         } catch (SQLException se) {
-            ds.logError("ERROR: DataSource getMovieStars", se);
+            dm.logError("ERROR: DataModel getMovieStars", se);
         } finally {
             // Close all open connections
-            ds.closeStatement();
+            dm.closeStatement();
         }
     }
 
@@ -189,29 +189,29 @@ public class DataSource {
     public static ArrayList<Star> getStarsForQuery(String query, ArrayList<String> statement_parameters) {
         ArrayList<Star> stars = new ArrayList<Star>();
         // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
+        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    Star star = new Star(ds.rs);
-                    getStarMovies(ds, star);
+            if (dm.rs.isBeforeFirst()) {
+                while (dm.rs.next()) {
+                    Star star = new Star(dm.rs);
+                    getStarMovies(dm, star);
                     stars.add(star);
                 }
             } else {
                 return null;
             }
         } catch (SQLException se) {
-            DataSource.logError("ERROR: DataSource getStarsForQuery", se);
+            DataModel.logError("ERROR: DataModel getStarsForQuery", se);
         } finally {
-            ds.closeQuery();
+            dm.closeQuery();
         }
         return stars;
     }
 
-    private static void getStarMovies(DataSource ds, Star star) {
+    private static void getStarMovies(DataModel dm, Star star) {
         if (star.id() == null) { return; }
 
         ArrayList<Movie> movies = new ArrayList<Movie>();
@@ -221,21 +221,21 @@ public class DataSource {
         statement_parameters.add(star.id());
 
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
 
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    movies.add(new Movie(ds.rs));
+            if (dm.rs.isBeforeFirst()) {
+                while (dm.rs.next()) {
+                    movies.add(new Movie(dm.rs));
                 }
                 star.movies(movies);
             }
         } catch (SQLException se) {
-            ds.logError("ERROR: DataSource getStarMovies", se);
+            dm.logError("ERROR: DataModel getStarMovies", se);
         } finally {
             // Close all open connections
-            ds.closeStatement();
+            dm.closeStatement();
         }
     }
 
@@ -244,22 +244,22 @@ public class DataSource {
     public static ArrayList<Genre> getGenresForQuery(String query, ArrayList<String> statement_parameters) {
         ArrayList<Genre> genres = new ArrayList<Genre>();
         // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
+        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                while (ds.rs.next()) {
-                    genres.add(new Genre(ds.rs));
+            if (dm.rs.isBeforeFirst()) {
+                while (dm.rs.next()) {
+                    genres.add(new Genre(dm.rs));
                 }
             } else {
                 return null;
             }
         } catch (SQLException se) {
-            DataSource.logError("ERROR: Movie getGenresForQuery", se);
+            DataModel.logError("ERROR: Movie getGenresForQuery", se);
         } finally {
-            ds.closeQuery();
+            dm.closeQuery();
         }
         return genres;
     }
@@ -268,19 +268,19 @@ public class DataSource {
     public static int getQueryCount(String query, ArrayList<String> statement_parameters) {
         int count = 0;
         // Manages opening/closing the connections to the database
-        DataSource ds = new DataSource();
+        DataModel dm = new DataModel();
         // Open a connection and execute the query
-        ds.executeQuery(query, statement_parameters);
+        dm.executeQuery(query, statement_parameters);
         try {
             // If the query was not empty
-            if (ds.rs.isBeforeFirst()) {
-                ds.rs.next();
-                count = ds.rs.getInt(1);
+            if (dm.rs.isBeforeFirst()) {
+                dm.rs.next();
+                count = dm.rs.getInt(1);
             }
         } catch (SQLException se) {
-            DataSource.logError("ERROR: DataSource getQueryCount", se);
+            DataModel.logError("ERROR: DataModel getQueryCount", se);
         } finally {
-            ds.closeQuery();
+            dm.closeQuery();
         }
         return count;
     }

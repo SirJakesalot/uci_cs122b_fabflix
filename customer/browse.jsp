@@ -25,8 +25,8 @@
         </td>
         <td class='browse_categories' valign="top">
           <span class="anchor" >
-            <p><a onmouseover="showbox('${context}','${movie.id()}')" onmouseout="hidebox('${movie.id()}')" href="${context}/customer/single_movie?movie_id=${movie.id()}">${movie.title()} </a></p>
-            <span id="${movie.id()}" class="hide"></span>
+            <p><a onmouseover="showbox('${context}','${movie.id()}')" href="${context}/customer/single_movie?movie_id=${movie.id()}">${movie.title()} </a></p>
+            <span id="${movie.id()}" class="hide" onmouseout="hidebox('${movie.id()}')"></span>
           </span>
           <p>${movie.year()}</p>
           <p>${movie.director()}</p>
