@@ -40,7 +40,6 @@
   <display-name>fabflix web-xml display name</display-name>
   <description>fabflix web-xml description</description>
 
-<!--
     <security-constraint>
      <web-resource-collection>
         <web-resource-name>HTTPSOnly</web-resource-name>
@@ -50,7 +49,6 @@
         <transport-guarantee>CONFIDENTIAL</transport-guarantee>
      </user-data-constraint>
     </security-constraint>
--->
 
 
 <!-- Login -->

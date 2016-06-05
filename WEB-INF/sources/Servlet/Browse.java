@@ -133,9 +133,9 @@ public class Browse extends HttpServlet {
         long endTS = System.nanoTime() - startTS;
         BufferedWriter out = null;
         try {
-            FileWriter fstream = new FileWriter("/home/ubuntu/logs.txt", true); //true tells to append data.
+            FileWriter fstream = new FileWriter("/tmp/logs.txt", true); //true tells to append data.
             out = new BufferedWriter(fstream);
-            out.write("TS:" + Long.toString(endTS) + " TJ:" + Long.toString(endTJ));
+            out.write(Long.toString(endTS) + " " + Long.toString(endTJ) + "\n");
         }
         catch (IOException e)
         {
