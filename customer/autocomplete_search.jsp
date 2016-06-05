@@ -9,8 +9,8 @@
 
 <c:set var="context" value="${pageContext.request.contextPath}" />
 
-<ul style="list-style: none;">
+<table style="text-align: left;">
   <c:forEach var="title" items="${autocomplete_titles}">
-    <li><p class='select' onmouseover="$('#autocomplete_title').html('${title}');">${title}</p></li>
+    <tr><td><p class='select' onmousedown="$('#autocomplete_title').val('${title}');">${title}</p></td></tr>
   </c:forEach>
-</ul>
+</table>

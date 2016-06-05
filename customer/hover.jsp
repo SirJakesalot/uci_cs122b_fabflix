@@ -14,7 +14,6 @@
 <%@ page import="moviedb_model.Star"%>
 <%@ page import="moviedb_model.Genre"%>
 <%@ page import="moviedb_model.CartItem"%>
-<h1>${movie.title()}</h1>
 <figure>
   <img src="${movie.banner_url()}" alt="No banner available" onerror="this.onError=null;this.src='${context}/images/no_photo.png';">
   <figcaption>Banner</figcaption>
@@ -41,7 +40,7 @@
     <td>
       <ul style="list-style: none;">
         <c:forEach var="genre" items="${movie.genres()}">
-          <li><a href="${context}/customer/browse?genre=${genre.name()}">${genre.name()}</a></li>
+          <a href="${context}/customer/browse?genre=${genre.name()}">${genre.name()}</a>,
         </c:forEach>
       </ul>
     </td>
@@ -51,7 +50,7 @@
     <td>
       <ul style="list-style: none;">
         <c:forEach var="star" items="${movie.stars()}">
-          <li><a href="${context}/customer/single_star?star_id=${star.id()}">${star.first_name()} ${star.last_name()}</a></li>
+          <a href="${context}/customer/single_star?star_id=${star.id()}">${star.first_name()} ${star.last_name()}</a>,
         </c:forEach>
       </ul>
     </td>

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/">
-  <Resource name="jdbc/moviedb_read" auth="Container" type="javax.sql.DataSource"
-                  maxActive="100" maxIdle="30" maxWait="10000"
-                  username="root" password="root" driverClassName="com.mysql.jdbc.Driver"
-                  url="jdbc:mysql://localhost:3306/moviedb"/>
-  <Resource name="jdbc/moviedb_write" auth="Container" type="javax.sql.DataSource"
-                  maxActive="100" maxIdle="30" maxWait="10000"
-                  username="slave" password="slavepassword" driverClassName="com.mysql.jdbc.Driver"
-                  url="jdbc:mysql://172.31.22.158:3306/moviedb"/>
+  <Resource name="jdbc/moviedb_read" driverClassName="com.mysql.jdbc.Driver" auth="Container" type="javax.sql.DataSource"
+            username="root" password="root" 
+            url="jdbc:mysql://localhost:3306/moviedb"
+            initialSize="40" maxActive="100" maxIdle="80" minIdle="40" minEvictableIdleTimeMillis="55000" timeBetweenEvictionRunsMillis="34000"
+            testOnBorrow="true" validationInterval="60000" validationQuery="SELECT 1"
+            removeAbandoned="true" removeAbandonedTimeout="55"
+            maxWait="10000"
+  />
+  <Resource name="jdbc/moviedb_write" driverClassName="com.mysql.jdbc.Driver" auth="Container" type="javax.sql.DataSource"
+            username="slave" password="slavepassword" 
+            url="jdbc:mysql://172.31.22.158:3306/moviedb"
+            initialSize="20" maxActive="40" maxIdle="30" minIdle="20" minEvictableIdleTimeMillis="55000" timeBetweenEvictionRunsMillis="34000"
+            testOnBorrow="true" validationInterval="60000" validationQuery="SELECT 1"
+            removeAbandoned="true" removeAbandonedTimeout="55"
+            maxWait="10000"
+  />
 </Context>
