@@ -21,6 +21,9 @@ public class Browse extends HttpServlet {
 
     // Get all of the search attributes and construct a query based on those attributes. Then show movies that are relevant to that query.
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        // Time an event in a program to nanosecond precision
+        long startTS = System.nanoTime();
+        long endTJ = 0;
 
         try {
             // Get parameters
@@ -70,6 +73,9 @@ public class Browse extends HttpServlet {
 
             movie_count_query += search_requirements;
             // Executes the query to get the count
+
+        
+            long startTJ = System.nanoTime();
             DataModel dm = new DataModel();
             int movie_count = dm.getQueryCount(movie_count_query, statement_parameters);
             // Close resultset and statement
@@ -97,6 +103,7 @@ public class Browse extends HttpServlet {
             ArrayList<Movie> movies = dm.getMoviesForQuery(movie_query, statement_parameters);
             // Close all open connections
             dm.closeConnection();
+            endTJ = System.nanoTime() - startTJ; 
 
             // The search requirements given they had no results
             if (movies == null) {
@@ -122,6 +129,25 @@ public class Browse extends HttpServlet {
             request.setAttribute("error", e.toString());
             e.printStackTrace();
         }
+
+        long endTS = System.nanoTime() - startTS;
+        BufferedWriter out = null;
+        try {
+            FileWriter fstream = new FileWriter("/home/ubuntu/logs.txt", true); //true tells to append data.
+            out = new BufferedWriter(fstream);
+            out.write("TS:" + Long.toString(endTS) + " TJ:" + Long.toString(endTJ));
+        }
+        catch (IOException e)
+        {
+            System.err.println("Error: " + e.getMessage());
+        }
+        finally
+        {
+            if(out != null) {
+                out.close();
+            }
+        }
+
         request.getRequestDispatcher("browse.jsp").forward(request, response);
     }
 

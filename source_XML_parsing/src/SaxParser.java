@@ -27,13 +27,13 @@ public class SaxParser {
      
    private static Connection getConnection () {
     
-     String db = "moviedb_project3_grading";
-     String user = "classta";
-     String pass = "classta";
+     //String db = "moviedb_project3_grading";
+     //String user = "classta";
+     //String pass = "classta";
 
-     //String db = "moviedb";
-     //String user = "root";
-     //String pass = "root";
+     String db = "moviedb";
+     String user = "root";
+     String pass = "root";
      try {
          return DriverManager.getConnection(DB_URL + db, user, pass); 
      } catch (SQLException se) {
