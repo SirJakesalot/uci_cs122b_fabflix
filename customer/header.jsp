@@ -15,8 +15,10 @@
 <%@ page import="moviedb_model.Genre"%>
 <%@ page import="moviedb_model.CartItem"%>
 <%
+
     Customer customer = (Customer) request.getSession().getAttribute("customer");
     if (customer == null) {
+	System.out.println("THIS IS THE SLAVE!");
         response.sendRedirect("");
     }
 %>

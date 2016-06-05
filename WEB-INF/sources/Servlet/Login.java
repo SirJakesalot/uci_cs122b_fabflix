@@ -18,7 +18,7 @@ public class Login extends HttpServlet {
 
     // Redirects because GET requests aren't allowed for login verification
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        response.sendRedirect("");
+        request.getRequestDispatcher("").forward(request, response);
     }
 
     // Authenticates user input from login.jsp
@@ -56,7 +56,7 @@ public class Login extends HttpServlet {
                 } else {
                     HttpSession session = request.getSession(true);
                     session.setAttribute("employee", employee);
-                    response.sendRedirect("employee/_dashboard");
+                    response.sendRedirect(request.getContextPath() + "/employee/_dashboard");
                 }
             } else {
                 // Returns null if invalid credentials
@@ -68,7 +68,7 @@ public class Login extends HttpServlet {
                 } else {
                     HttpSession session = request.getSession(true);
                     session.setAttribute("customer", customer);
-                    response.sendRedirect("customer/main");
+                    response.sendRedirect(request.getContextPath() + "/customer/main");
                 }
             }
         } catch (Exception e) { // in case?

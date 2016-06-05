@@ -21,7 +21,7 @@ public class Purchase extends HttpServlet {
         
         if (shopping_cart == null || shopping_cart.size() == 0) {
             session.setAttribute("error", "Nothing in your shopping cart");
-            response.sendRedirect("shopping_cart");
+            response.sendRedirect(request.getContextPath() + "/customer/shopping_cart");
             return;
         }
 
@@ -33,8 +33,8 @@ public class Purchase extends HttpServlet {
 
         boolean payment_accepted = CreditCard.check(first_name, last_name, exp_date, cc_id);
         if (!payment_accepted) {
-            request.setAttribute("error", "Invalid creditcard information");
-            request.getRequestDispatcher("checkout").forward(request, response);
+            session.setAttribute("error", "Invalid creditcard information");
+            response.sendRedirect(request.getContextPath() + "/customer/checkout");
             return;
         }
 
@@ -45,7 +45,7 @@ public class Purchase extends HttpServlet {
         current_month = calendar.get(Calendar.MONTH) + 1; // month start from 0 to 11
         String current_date = current_year + "/" + current_month + "/" + current_day;
 
-        DataModel dm = new DataModel();
+        DataModel dm = new DataModel(true);
 
         try {
             ArrayList<String> statement_parameters;
@@ -62,14 +62,13 @@ public class Purchase extends HttpServlet {
             }
             session.setAttribute("shopping_cart", null);
             session.setAttribute("success", "Enjoy your movie purchases!");
-            response.sendRedirect("main");
+            response.sendRedirect(request.getContextPath() + "/customer/main");
         } catch (Exception e) {
             session.setAttribute("error", "Unable to process your order, please try again later\n" + e.toString());
-            response.sendRedirect("checkout");
+            response.sendRedirect(request.getContextPath() + "/customer/checkout");
         }
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-                
         doPost(request, response);
     }
 }

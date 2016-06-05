@@ -42,11 +42,10 @@ public class AddMovie extends HttpServlet {
             } catch (Exception e) {
                 // Invalid Year
             }
-            
-            DataModel dm = new DataModel();
-            Connection conn = dm.getConnection();
+            // Get a connection to the master with write privileges 
+            DataModel dm = new DataModel(true);
 
-            CallableStatement call = conn.prepareCall("{CALL add_movie(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement call = dm.conn.prepareCall("{CALL add_movie(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             call.setString(1, movie_title);
             call.setInt(2, movie_year);
             call.setString(3, movie_director);
@@ -77,7 +76,7 @@ public class AddMovie extends HttpServlet {
             session.setAttribute("genre_movie_link", call.getInt(14) != 0 ? "Genre already linked to Movie" : "Added Genre to Movie link");
 
             dm.closeConnection();
-            response.sendRedirect("employee/_dashboard");
+            response.sendRedirect(request.getContextPath() + "/employee/_dashboard");
 
         } catch (Exception e) {
             session.setAttribute("error", "Error: " + e.toString());

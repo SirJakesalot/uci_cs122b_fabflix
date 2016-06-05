@@ -25,11 +25,11 @@ public class Checkout extends HttpServlet {
 
             if (shopping_cart == null || shopping_cart.size() == 0) {
                 session.setAttribute("error", "You have no items in your cart!");
-                response.sendRedirect("shopping_cart");
+                response.sendRedirect(request.getContextPath() + "/customer/shopping_cart");
                 return;
             }
 
-            request.getRequestDispatcher("/customer/checkout.jsp").forward(request,response);
+            request.getRequestDispatcher("checkout.jsp").forward(request,response);
 
         } catch (Exception e) {
             request.setAttribute("error", e.toString());

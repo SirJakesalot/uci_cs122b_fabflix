@@ -14,14 +14,16 @@
   <title>fabflix</title>
 </head>
 <%
+    System.out.println("THIS IS THE SLAVE: login.jsp");
     Customer customer = (Customer) request.getSession().getAttribute("customer");
     if (customer != null) {
-        response.sendRedirect("customer/main");
+	System.out.println(request.getContextPath() + "/customer/main");
+        response.sendRedirect(request.getContextPath() + "/customer/main");
     }
 
     Employee employee = (Employee) request.getSession().getAttribute("employee");
     if (employee != null) {
-        response.sendRedirect("_dashboard");
+        response.sendRedirect(request.getContextPath() + "/_dashboard");
     }
 %>
 <body>

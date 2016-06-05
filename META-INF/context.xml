@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context path="/">
-  <Resource name="jdbc/moviedb" auth="Container" type="javax.sql.DataSource"
+  <Resource name="jdbc/moviedb_read" auth="Container" type="javax.sql.DataSource"
                   maxActive="100" maxIdle="30" maxWait="10000"
                   username="root" password="root" driverClassName="com.mysql.jdbc.Driver"
                   url="jdbc:mysql://localhost:3306/moviedb"/>
+  <Resource name="jdbc/moviedb_write" auth="Container" type="javax.sql.DataSource"
+                  maxActive="100" maxIdle="30" maxWait="10000"
+                  username="slave" password="slavepassword" driverClassName="com.mysql.jdbc.Driver"
+                  url="jdbc:mysql://172.31.22.158:3306/moviedb"/>
 </Context>

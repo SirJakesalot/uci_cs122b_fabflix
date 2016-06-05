@@ -23,7 +23,7 @@ public class Main extends HttpServlet {
         dm.closeConnection();
 
         request.setAttribute("genres", genres);
-        request.getRequestDispatcher("/customer/main.jsp").forward(request,response);
+        request.getRequestDispatcher("main.jsp").forward(request,response);
     }
 
     // Same as http GET

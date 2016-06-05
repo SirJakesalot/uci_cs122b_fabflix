@@ -19,7 +19,7 @@ public class Logout extends HttpServlet {
         if (session != null) {
             session.invalidate();
         }
-        response.sendRedirect("");
+        response.sendRedirect(request.getContextPath() + "/");
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {

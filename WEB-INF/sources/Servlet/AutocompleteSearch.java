@@ -72,7 +72,7 @@ public class AutocompleteSearch extends HttpServlet {
         dm.closeConnection();
 
         request.setAttribute("autocomplete_titles", autocomplete_titles);
-        request.getRequestDispatcher("/customer/autocomplete_search.jsp").forward(request,response);
+        request.getRequestDispatcher("autocomplete_search.jsp").forward(request,response);
     }
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doGet(request, response);

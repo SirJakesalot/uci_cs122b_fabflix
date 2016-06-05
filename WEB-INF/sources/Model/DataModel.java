@@ -13,16 +13,21 @@ import javax.sql.DataSource;
 
 public class DataModel {
 
-    //@Resource(name="jdbc/moviedb", type=javax.sql.DataSource.class)
-
     public Connection conn = null;
     public PreparedStatement stmt = null;
     public ResultSet rs = null;
 
     public DataModel() {
-        this.conn = getConnection(); 
+        this.conn = getReadConnection();
     }
-    
+    public DataModel(boolean write) {
+        if (write) {
+            this.conn = getWriteConnection();
+        } else {
+            this.conn = getReadConnection();
+        }
+    }
+
     // There should be a logger object to handle these! 
     public static void logError(String title, Exception e) {
         System.out.println(title);
@@ -30,16 +35,28 @@ public class DataModel {
     }
    
     // Creates a mysql connection 
-    public Connection getConnection() {
+    public Connection getReadConnection() {
         try {
             Context initCtx = new InitialContext();
             Context envCtx = (Context) initCtx.lookup("java:comp/env");
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb");
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb_read");
             conn = ds.getConnection(); 
             return conn;
-            //return ds.getConnection();
         } catch (Exception e) {
-            logError("ERROR: DataModel getConnection", e);
+            logError("ERROR: DataModel getReadConnection", e);
+            return null;
+        }
+    }
+    // Creates a mysql connection 
+    public Connection getWriteConnection() {
+        try {
+            Context initCtx = new InitialContext();
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb_write");
+            conn = ds.getConnection(); 
+            return conn;
+        } catch (Exception e) {
+            logError("ERROR: DataModel getWriteConnection", e);
             return null;
         }
     }
@@ -118,12 +135,14 @@ public class DataModel {
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
                     Movie movie = new Movie(rs);
-                    closeStatement();
+                    movies.add(movie);
+                }
+                closeStatement();
+		for (Movie movie: movies) {
                     getMovieGenres(movie);
                     closeStatement();
                     getMovieStars(movie);
-                    movies.add(movie);
-                }
+		}
             } else {
                 return null;
             }
@@ -190,9 +209,13 @@ public class DataModel {
             if (rs.isBeforeFirst()) {
                 while (rs.next()) {
                     Star star = new Star(rs);
-                    closeStatement();
-                    getStarMovies(star);
+                    //closeStatement();
+                    //getStarMovies(star);
                     stars.add(star);
+                }
+                closeStatement();
+                for (Star star: stars) {
+                    getStarMovies(star);
                 }
             } else {
                 return null;

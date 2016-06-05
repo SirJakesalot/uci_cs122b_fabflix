@@ -31,7 +31,7 @@ public class AddStar extends HttpServlet {
             statement_parameters.add(first_name);
             statement_parameters.add(last_name);
 
-            DataModel dm = new DataModel();
+            DataModel dm = new DataModel(true);
             int rows_affected = dm.executeUpdate(update, statement_parameters);
             switch (rows_affected) {
                 case 0:
@@ -44,11 +44,11 @@ public class AddStar extends HttpServlet {
                     session.setAttribute("success", "Number of rows were affected: " + rows_affected);
             }
             dm.closeConnection();
-            response.sendRedirect("employee/_dashboard");
+            response.sendRedirect(request.getContextPath() + "/employee/_dashboard");
         } catch (Exception e) {
-            session.setAttribute("error", "Error: " + e.toString());
+            //session.setAttribute("error", "Error: " + e.toString());
             e.printStackTrace();
-            response.sendRedirect("employee/_dashboard");
+            response.sendRedirect(request.getContextPath() + "/employee/_dashboard");
         } 
     }
 
