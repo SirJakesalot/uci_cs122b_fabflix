@@ -15,6 +15,10 @@
 <p>We are using a new database called moviedb_project4 for this project so that any changes we make won't interfere with the grading of project 3</p>
 <h3>Project 4 war name</h3>
 <p>We used the name fabflix_webapp instead of fabflix</p>
+<h3>Project 5</h3>
+<p>NOTE: When connecting to our project, you should use /fabflix/ as opposed to /fabflix</p>
+<p>Master IP: 54.186.177.203</p>
+<p>Slave IP: 54.186.37.7</p>
 </body>
 <html>
 

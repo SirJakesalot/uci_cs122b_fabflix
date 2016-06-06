@@ -1,0 +1,7 @@
+<html>
+<body>
+<h1>Connection Pooling</h1>
+<p>We followed the tutorial and included two resources in the web.xml's of our backend servers. One for reading connections (the localhost) and another for writing to connections (the master). The configurations for these resources was done in the /var/lib/tomcat7/webapps/fabflix/META-INF/context.xml. We setup a lot of parameters for idle times initial size. We then made edits to the pull from a connection from this datasource as opposed to creating a new connection every time.</p>
+</body>
+<html>
+
