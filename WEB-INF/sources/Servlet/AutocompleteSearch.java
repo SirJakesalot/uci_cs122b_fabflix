@@ -20,7 +20,6 @@ public class AutocompleteSearch extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String autocomplete_title = request.getParameter("autocomplete_title");
-        System.out.println("AutocompleteTitle: " + autocomplete_title);
         if (autocomplete_title == null || "".equals(autocomplete_title)) { return; }
 
         String[] tokens = autocomplete_title.split("\\s+");

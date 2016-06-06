@@ -68,7 +68,6 @@ public class Customer {
         try {
             // If the query was not empty
             if (dm.rs.isBeforeFirst()) {
-                //System.out.println("ResultSet is not empty");
                 dm.rs.next();
                 customer = new Customer(dm.rs);
             }
