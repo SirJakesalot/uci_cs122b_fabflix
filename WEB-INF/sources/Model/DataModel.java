@@ -41,6 +41,7 @@ public class DataModel {
             Context envCtx = (Context) initCtx.lookup("java:comp/env");
             DataSource ds = (DataSource) envCtx.lookup("jdbc/moviedb_read");
             conn = ds.getConnection(); 
+
             return conn;
         } catch (Exception e) {
             logError("ERROR: DataModel getReadConnection", e);
@@ -65,7 +66,7 @@ public class DataModel {
         try {
             // Print out the query we are using
             System.out.println("Query: " + query);
-            
+
             // Declare our statement
             stmt = conn.prepareStatement(query);
             // Set and print the parameters for the query

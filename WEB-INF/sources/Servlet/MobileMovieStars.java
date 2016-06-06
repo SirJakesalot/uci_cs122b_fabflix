@@ -38,7 +38,6 @@ public class MobileMovieStars extends HttpServlet
             json = json.substring(0, json.length() - 1);
             json += "]";
             writer.print(json);
-            System.out.println("JSON: " + json);
 
         } catch (Exception e) {
             // Error

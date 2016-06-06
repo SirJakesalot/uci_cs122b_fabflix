@@ -71,7 +71,6 @@ public class MobileBrowse extends HttpServlet {
             }
             json += "]";
             writer.print(json);
-            //System.out.println(json);
             
         } catch (Exception e) {
             request.setAttribute("error", e.toString());

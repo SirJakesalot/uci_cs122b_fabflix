@@ -22,7 +22,6 @@ public class MobileLogin extends HttpServlet {
         response.setContentType("text/html");
         PrintWriter writer = response.getWriter();
         writer.print(failure);
-        System.out.println("did a get response");
     }
 
     // Authenticates user input from login.jsp
