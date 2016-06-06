@@ -19,6 +19,10 @@
 <p>NOTE: When connecting to our project, you should use /fabflix/ as opposed to /fabflix</p>
 <p>Master IP: 54.186.177.203</p>
 <p>Slave IP: 54.186.37.7</p>
+<h3>Log Parsing Script</h3>
+<p>Everytime there was a request to ip/fabflix/browse, we would time how long the servlet/JDBC took to process and record them to /tmp/logs.txt. Then we would combine the results from the backend servers and run a python script (log_parser.py) to read in each line of the file and compute the TS/TJ averages. We then took these statistics and recorded them for performance testing.</p>
+<p>The script can be ran like the following:</p>
+<p>$ python log_parser.py /tmp/logs.txt</p>
 </body>
 <html>
 
